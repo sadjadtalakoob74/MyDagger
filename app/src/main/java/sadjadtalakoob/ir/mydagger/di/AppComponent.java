@@ -11,6 +11,7 @@ import sadjadtalakoob.ir.mydagger.BaseApplication;
 @Component(
         modules = {
                 AndroidSupportInjectionModule.class,
+                ActivityBuildersModule.class,
         }
 
 )
