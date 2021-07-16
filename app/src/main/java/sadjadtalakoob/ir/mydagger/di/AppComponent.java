@@ -2,6 +2,7 @@ package sadjadtalakoob.ir.mydagger.di;
 
 import android.app.Application;
 
+
 import javax.inject.Singleton;
 
 import dagger.BindsInstance;
@@ -16,15 +17,24 @@ import sadjadtalakoob.ir.mydagger.BaseApplication;
                 AndroidSupportInjectionModule.class,
                 ActivityBuildersModule.class,
                 AppModule.class,
+                ViewModelFactoryModule.class,
         }
-
 )
 public interface AppComponent extends AndroidInjector<BaseApplication> {
+
     @Component.Builder
-    interface Builder {
+    interface Builder{
+
         @BindsInstance
         Builder application(Application application);
 
         AppComponent build();
     }
 }
+
+
+
+
+
+
+

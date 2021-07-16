@@ -1,15 +1,17 @@
 package sadjadtalakoob.ir.mydagger.di;
 
+
+
 import dagger.Module;
-import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
-import sadjadtalakoob.ir.mydagger.AuthActivity;
+import sadjadtalakoob.ir.mydagger.di.auth.AuthViewModelsModule;
+import sadjadtalakoob.ir.mydagger.ui.auth.AuthActivity;
 
 @Module
 public abstract class ActivityBuildersModule {
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(
+            modules = {AuthViewModelsModule.class})
     abstract AuthActivity contributeAuthActivity();
-
 
 }
