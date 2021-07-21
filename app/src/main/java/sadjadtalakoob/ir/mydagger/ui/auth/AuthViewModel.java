@@ -1,5 +1,6 @@
 package sadjadtalakoob.ir.mydagger.ui.auth;
 
+import android.icu.lang.UScript;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -17,6 +18,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import sadjadtalakoob.ir.mydagger.SessionManager;
 import sadjadtalakoob.ir.mydagger.models.User;
 import sadjadtalakoob.ir.mydagger.network.auth.AuthApi;
 
@@ -26,52 +28,49 @@ public class AuthViewModel extends ViewModel {
     private static final String TAG = "AuthViewModel";
     private final AuthApi authApi;
 
-    private MediatorLiveData<AuthResource<User>> authUser = new MediatorLiveData<>();
+    private SessionManager sessionManager;
 
     @Inject
-    public AuthViewModel(AuthApi authApi) {
+    public AuthViewModel(AuthApi authApi, SessionManager sessionManager) {
         this.authApi = authApi;
+        this.sessionManager = sessionManager;
         Log.d(TAG, "AuthViewModel: viewmodel is working...");
 
     }
 
     public void authenticateWithId(int userId) {
-        authUser.setValue(AuthResource.loading((User) null));
-        final LiveData<AuthResource<User>> source = LiveDataReactiveStreams.fromPublisher(
+        Log.d(TAG, "authenticateWithId: Attempting to login.");
+        sessionManager.authenticatedWithId(queryUserId(userId));
+    }
+
+    private LiveData<AuthResource<User>> queryUserId(int userId) {
+
+        return LiveDataReactiveStreams.fromPublisher(
                 authApi.getUser(userId)
                         .subscribeOn(Schedulers.io())
                         .onErrorReturn(new Function<Throwable, User>() {
+                                           @NotNull
+                                           @Override
+                                           public User apply(@NotNull Throwable throwable) throws Exception {
+                                               User errorUser = new User();
+                                               errorUser.setId(-1);
+                                               return errorUser;
+                                           }
+                                       }
+                        )
+                        .map(new Function<User, AuthResource<User>>() {
                             @NotNull
                             @Override
-                            public User apply(@NotNull Throwable throwable) throws Exception {
-                                User errorUser = new User();
-                                errorUser.setId(-1);
-                                return errorUser;
+                            public AuthResource<User> apply(@NotNull User user) throws Exception {
+                                if (user.getId() == -1) {
+                                    return AuthResource.error("Could not authenticate user", (User) null);
+                                }
+                                return AuthResource.authenticated(user);
                             }
-                        }
-                        )
-                .map(new Function<User, AuthResource<User>>() {
-                    @NotNull
-                    @Override
-                    public AuthResource<User> apply(@NotNull User user) throws Exception {
-                        if (user.getId() == -1){
-                            return AuthResource.error("Could not authenticate user", (User)null);
-                        }
-                        return AuthResource.authenticated(user);
-                    }
-                })
-        );
-
-        authUser.addSource(source, new Observer<AuthResource<User>>() {
-            @Override
-            public void onChanged(AuthResource<User> user) {
-                authUser.setValue(user);
-                authUser.removeSource(source);
-            }
-        });
+                        }));
     }
 
-    public LiveData<AuthResource<User>> observeUser() {
-        return authUser;
+    public LiveData<AuthResource<User>> observeAuthState() {
+        return sessionManager.getAuthUser();
     }
 }

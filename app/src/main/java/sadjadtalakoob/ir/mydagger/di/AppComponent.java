@@ -10,6 +10,7 @@ import dagger.Component;
 import dagger.android.AndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
 import sadjadtalakoob.ir.mydagger.BaseApplication;
+import sadjadtalakoob.ir.mydagger.SessionManager;
 
 @Singleton
 @Component(
@@ -21,6 +22,8 @@ import sadjadtalakoob.ir.mydagger.BaseApplication;
         }
 )
 public interface AppComponent extends AndroidInjector<BaseApplication> {
+
+    SessionManager sessionmanager();
 
     @Component.Builder
     interface Builder{

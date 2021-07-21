@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerAppCompatActivity;
 import sadjadtalakoob.ir.mydagger.R;
 import sadjadtalakoob.ir.mydagger.models.User;
+import sadjadtalakoob.ir.mydagger.ui.main.MainActivity;
 import sadjadtalakoob.ir.mydagger.viewmodels.ViewModelProviderFactory;
 
 public class AuthActivity extends DaggerAppCompatActivity implements View.OnClickListener {
@@ -62,7 +64,7 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
 
     private void subscribeObservers() {
 
-        viewModel.observeUser().observe(this, new Observer<AuthResource<User>>() {
+        viewModel.observeAuthState().observe(this, new Observer<AuthResource<User>>() {
             @Override
             public void onChanged(AuthResource<User> userAuthResource) {
                 if (userAuthResource != null) {
@@ -81,6 +83,7 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
                         case AUTHENTICATED:
                             showProgressbar(false);
                             Log.d(TAG, "onChanged: LOGIN SUCCESS " + userAuthResource.data.getEmail());
+                            onLoginSuccess();
                             break;
                     }
                 }
@@ -112,6 +115,12 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
                 break;
         }
 
+    }
+
+    private void onLoginSuccess(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void attemptLogin() {
