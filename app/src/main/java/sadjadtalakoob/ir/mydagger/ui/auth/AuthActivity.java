@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.bumptech.glide.RequestManager;
 
@@ -29,6 +31,8 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
     private AuthViewModel viewModel;
 
     private EditText userId;
+
+    private ProgressBar progressBar;
 
     @Inject
     ViewModelProviderFactory providerFactory;
@@ -48,6 +52,8 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
 
         findViewById(R.id.login_button).setOnClickListener(this);
 
+        progressBar = findViewById(R.id.progress_bar);
+
         viewModel = ViewModelProviders.of(this, providerFactory).get(AuthViewModel.class);
 
         setLogo();
@@ -55,14 +61,40 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
     }
 
     private void subscribeObservers() {
-        viewModel.observeUser().observe(this, new Observer<User>() {
+
+        viewModel.observeUser().observe(this, new Observer<AuthResource<User>>() {
             @Override
-            public void onChanged(User user) {
-                if (user != null) {
-                    Log.d(TAG, "onChanged: " + user.getEmail());
+            public void onChanged(AuthResource<User> userAuthResource) {
+                if (userAuthResource != null) {
+                    switch (userAuthResource.status) {
+                        case ERROR:
+                            showProgressbar(false);
+                            Toast.makeText(AuthActivity.this, userAuthResource.message +
+                                    "\nDid you enter number between 1 and 10?", Toast.LENGTH_SHORT).show();
+                            break;
+                        case LOADING:
+                            showProgressbar(true);
+                            break;
+                        case NOT_AUTHENTICATED:
+                            showProgressbar(false);
+                            break;
+                        case AUTHENTICATED:
+                            showProgressbar(false);
+                            Log.d(TAG, "onChanged: LOGIN SUCCESS " + userAuthResource.data.getEmail());
+                            break;
+                    }
                 }
             }
         });
+    }
+
+    private void showProgressbar(boolean isVisible) {
+
+        if (isVisible) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setLogo() {
