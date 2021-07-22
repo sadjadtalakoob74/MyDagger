@@ -40,7 +40,7 @@ public class AuthViewModel extends ViewModel {
 
     public void authenticateWithId(int userId) {
         Log.d(TAG, "authenticateWithId: Attempting to login.");
-        sessionManager.authenticatedWithId(queryUserId(userId));
+        sessionManager.authenticateWithId(queryUserId(userId));
     }
 
     private LiveData<AuthResource<User>> queryUserId(int userId) {
