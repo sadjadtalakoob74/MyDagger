@@ -14,14 +14,16 @@ import sadjadtalakoob.ir.mydagger.ui.main.posts.PostRecyclerAdapter;
 @Module
 public class MainModule {
 
+    @MainScope
     @Provides
-    static PostRecyclerAdapter postRecyclerAdapter(){
+    static PostRecyclerAdapter postRecyclerAdapter() {
         return new PostRecyclerAdapter();
     }
 
-@Provides
-    static MainApi provideMainApi(Retrofit retrofit){
-    return retrofit.create(MainApi.class);
-}
+    @MainScope
+    @Provides
+    static MainApi provideMainApi(Retrofit retrofit) {
+        return retrofit.create(MainApi.class);
+    }
 
 }
