@@ -7,6 +7,7 @@ import dagger.android.ContributesAndroidInjector;
 import sadjadtalakoob.ir.mydagger.di.auth.AuthModule;
 import sadjadtalakoob.ir.mydagger.di.auth.AuthViewModelsModule;
 import sadjadtalakoob.ir.mydagger.di.main.MainFragmentBuildersModule;
+import sadjadtalakoob.ir.mydagger.di.main.MainModule;
 import sadjadtalakoob.ir.mydagger.di.main.MainViewModelsModule;
 import sadjadtalakoob.ir.mydagger.ui.auth.AuthActivity;
 import sadjadtalakoob.ir.mydagger.ui.main.MainActivity;
@@ -19,7 +20,7 @@ public abstract class ActivityBuildersModule {
     abstract AuthActivity contributeAuthActivity();
 
     @ContributesAndroidInjector(
-            modules = {MainFragmentBuildersModule.class, MainViewModelsModule.class}
+            modules = {MainFragmentBuildersModule.class, MainViewModelsModule.class, MainModule.class}
     )
     abstract MainActivity conMainActivity();
 
