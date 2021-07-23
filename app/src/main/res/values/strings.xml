@@ -3,6 +3,8 @@
     <string name="logout">log out</string>
     <string name="profile">Profile</string>
     <string name="posts">Posts</string>
+    <string name="photos">Photos</string>
     <string name="fragment_profile">Profile Fragment</string>
     <string name="fragment_posts">Post Fragment</string>
+    <string name="fragment_photos">Photos Fragment</string>
 </resources>

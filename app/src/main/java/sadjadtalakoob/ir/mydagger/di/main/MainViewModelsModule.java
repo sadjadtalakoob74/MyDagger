@@ -6,6 +6,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
 import sadjadtalakoob.ir.mydagger.di.ViewModelKey;
+import sadjadtalakoob.ir.mydagger.ui.main.photos.PhotosViewModel;
 import sadjadtalakoob.ir.mydagger.ui.main.posts.PostsViewModel;
 import sadjadtalakoob.ir.mydagger.ui.main.profile.ProfileViewModel;
 
@@ -21,4 +22,9 @@ public abstract class MainViewModelsModule {
     @IntoMap
     @ViewModelKey(PostsViewModel.class)
     public abstract ViewModel bindPostViewModel(PostsViewModel postsViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PhotosViewModel.class)
+    public abstract ViewModel bindPhotoViewModel(PhotosViewModel photosViewModel);
 }

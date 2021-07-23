@@ -19,4 +19,10 @@
         tools:layout="@layout/fragment_posts">
     </fragment>
 
+    <fragment
+        android:id="@+id/photosScreen"
+        android:name="sadjadtalakoob.ir.mydagger.ui.main.photos.PhotosFragment"
+        android:label="@string/fragment_photos"
+        tools:layout="@layout/fragment_photos">
+    </fragment>
 </navigation>

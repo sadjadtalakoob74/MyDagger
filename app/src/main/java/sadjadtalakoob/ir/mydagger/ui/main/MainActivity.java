@@ -75,6 +75,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
                 break;
             }
+
+            case R.id.nav_photos: {
+                if (isValidDestination(R.id.photosScreen)) {
+                    Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.photosScreen);
+                }
+                break;
+            }
         }
         menuItem.setChecked(true);
         drawerLayout.closeDrawer(GravityCompat.START);
